@@ -165,8 +165,49 @@ pipeline {
 					}
 				}
 			} 
-		}        
-		stage('Run UPP RTs on Hercules') {
+		} 
+		stage('Run UPP RTs on Ursa') {
+			agent {
+				label "ursa"
+			}
+			environment {
+				ACCNR = 'epic'
+				NODE_PATH = '/scratch4/NAGAPE/epic/role-epic/ursa/UPP/test_suite'
+			}
+			steps {
+				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+					cleanWs()
+					checkout scm
+					sh '''
+					echo $(pwd)
+					cd ci/
+                                        echo $CHANGE_ID
+                                        export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
+                                        export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
+					./rt.sh -a ${ACCNR} -r `pwd`/rundir
+                                        cd ../tests/logs
+					git remote -v
+                                        git fetch --no-recurse-submodules origin
+                                        git config user.email "ecc.platform@noaa.gov"
+                                        git config user.name "epic-cicd-jenkins"
+                                        echo "Ursa testing concluded..."
+                                        git remote -v | grep -w sshorigin > /dev/null 2>&1 && git remote remove sshorigin > /dev/null 2>&1
+					git remote add sshorigin $SSH_ORIGIN > /dev/null 2>&1
+                                        git pull sshorigin $FORK_BRANCH
+					git add rt.log.URSA
+                                        git commit -m "Ursa Jobs Completed."
+                                        git push sshorigin HEAD:$FORK_BRANCH
+					'''
+				}
+			}
+			post {
+				always {
+					script {
+						formatComment("Ursa")
+					}
+				}
+			} 
+		}        		stage('Run UPP RTs on Hercules') {
 			agent {
 				label "hercules"
 			}
