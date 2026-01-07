@@ -81,7 +81,8 @@ pipeline {
 					}
 				}    
 			}
-		} 
+		}
+		
 		stage('Run UPP RTs on Orion') {
 			agent {
 				label "orion"
@@ -123,7 +124,8 @@ pipeline {
 					}
 				}
 			}
-		} 
+		}
+		
 		stage('Run UPP RTs on Hera') {
 			agent {
 				label "hera"
@@ -165,7 +167,8 @@ pipeline {
 					}
 				}
 			} 
-		} 
+		}
+		
 		stage('Run UPP RTs on Ursa') {
 			agent {
 				label "ursa"
@@ -207,7 +210,9 @@ pipeline {
 					}
 				}
 			} 
-		}        		stage('Run UPP RTs on Hercules') {
+		}
+		
+		stage('Run UPP RTs on Hercules') {
 			agent {
 				label "hercules"
 			}
