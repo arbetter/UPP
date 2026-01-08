@@ -89,7 +89,7 @@ pipeline {
 			}
 		}
 
-		if (CHOICE_NODE == 'orion') {
+
 		stage('Run UPP RTs on Orion') {
 			agent {
 				label "orion"
@@ -98,6 +98,7 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/orion'
 			}
+			when(CHOICE_NODE == 'orion'){
 			steps {
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					cleanWs()
@@ -124,6 +125,7 @@ pipeline {
 					'''
 				}
 			}
+			} // when
 			post {
 				always {
 					script {
@@ -141,6 +143,7 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/scratch2/NAGAPE/epic/UPP/jenkins-ci'
 			}
+			when (CHOICE_NODE == 'hera') {
 			steps {
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					cleanWs()
@@ -167,6 +170,7 @@ pipeline {
 					'''
 				}
 			}
+			} // when
 			post {
 				always {
 					script {
@@ -175,9 +179,6 @@ pipeline {
 				}
 			} 
 		}
-
-		}
-		else if(CHOICE_NODE == 'ursa') {
 		
 		stage('Run UPP RTs on Ursa') {
 			agent {
@@ -187,6 +188,7 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/scratch4/NAGAPE/epic/role-epic/ursa/UPP/test_suite'
 			}
+			when (CHOICE_NODE == 'ursa'){
 			steps {
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					cleanWs()
@@ -213,6 +215,7 @@ pipeline {
 					'''
 				}
 			}
+			} // when
 			post {
 				always {
 					script {
@@ -222,9 +225,6 @@ pipeline {
 			} 
 		}
 			
-		}
-		else if (CHOICE_NODE == 'hercules'){
-		
 		stage('Run UPP RTs on Hercules') {
 			agent {
 				label "hercules"
@@ -233,6 +233,7 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/hercules'
 			}
+			when (CHOICE_NODE == 'hercules'){
 			steps {
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {	
 					cleanWs()
@@ -259,6 +260,7 @@ pipeline {
 					'''
 				}
 			}
+			} // when
 			post {
 				always {
 					script {
@@ -268,7 +270,6 @@ pipeline {
 			}
 		} 
 
-		}
 		// TO BE ADDED...
 		// stage('Run UPP RTs on Jet') {
 		// 	agent {
