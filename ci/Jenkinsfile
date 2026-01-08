@@ -223,7 +223,7 @@ pipeline {
 		}
 			
 		}
-		else if {CHOICE_NODE == 'hercules'){
+		else if (CHOICE_NODE == 'hercules'){
 		
 		stage('Run UPP RTs on Hercules') {
 			agent {
