@@ -197,7 +197,7 @@ pipeline {
                                         echo $CHANGE_ID
                                         export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
                                         export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
-					./rt.sh -a ${ACCNR} -r `pwd`/rundir
+					./rt.sh -a ${ACCNR} -C intel -r `pwd`/rundir
                                         cd ../tests/logs
 					git remote -v
                                         git fetch --no-recurse-submodules origin
