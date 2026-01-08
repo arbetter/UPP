@@ -187,8 +187,7 @@ pipeline {
 				NODE_PATH = '/scratch4/NAGAPE/epic/role-epic/ursa/UPP/test_suite'
 			}
 
-			steps {
-			  when (CHOICE_NODE == 'ursa'){		
+			steps {		
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					cleanWs()
 					checkout scm
