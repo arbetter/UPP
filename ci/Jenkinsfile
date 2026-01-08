@@ -98,8 +98,9 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/orion'
 			}
-			when(CHOICE_NODE == 'orion'){
+
 			steps {
+			  when(CHOICE_NODE == 'orion'){			
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					cleanWs()
 					checkout scm
@@ -124,8 +125,8 @@ pipeline {
                                         git push sshorigin HEAD:$FORK_BRANCH
 					'''
 				}
-			}
 			} // when
+			} 
 			post {
 				always {
 					script {
@@ -143,9 +144,10 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/scratch2/NAGAPE/epic/UPP/jenkins-ci'
 			}
-			when (CHOICE_NODE == 'hera') {
+
 			steps {
-				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+			  when (CHOICE_NODE == 'hera') {
+					catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					cleanWs()
 					checkout scm
 					sh '''
@@ -169,8 +171,8 @@ pipeline {
                                         git push sshorigin HEAD:$FORK_BRANCH
 					'''
 				}
-			}
 			} // when
+			} 
 			post {
 				always {
 					script {
@@ -188,8 +190,9 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/scratch4/NAGAPE/epic/role-epic/ursa/UPP/test_suite'
 			}
-			when (CHOICE_NODE == 'ursa'){
+
 			steps {
+			  when (CHOICE_NODE == 'ursa'){		
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 					cleanWs()
 					checkout scm
@@ -214,8 +217,8 @@ pipeline {
                                         git push sshorigin HEAD:$FORK_BRANCH
 					'''
 				}
-			}
 			} // when
+			} 
 			post {
 				always {
 					script {
@@ -233,8 +236,9 @@ pipeline {
 				ACCNR = 'epic'
 				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/hercules'
 			}
-			when (CHOICE_NODE == 'hercules'){
+
 			steps {
+			  when (CHOICE_NODE == 'hercules'){			
 				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {	
 					cleanWs()
 					checkout scm
@@ -259,8 +263,8 @@ pipeline {
                                         git push sshorigin HEAD:$FORK_BRANCH
 					'''
 				}
-			}
-			} // when
+			}// when
+			} 
 			post {
 				always {
 					script {
