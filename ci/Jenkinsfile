@@ -90,97 +90,93 @@ pipeline {
 		}
 
 
-		stage('Run UPP RTs on Orion') {
-			agent {
-				label "orion"
-			}
-			environment {
-				ACCNR = 'epic'
-				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/orion'
-			}
-
-			steps {
-			  when(CHOICE_NODE == 'orion'){			
-				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-					cleanWs()
-					checkout scm
-					sh '''
-					echo $(pwd)
-					cd ci/
-                                        echo $CHANGE_ID
-                                        export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
-                                        export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
-					./rt.sh -a ${ACCNR} -r `pwd`/rundir
-                                        cd ../tests/logs
-					git remote -v
-                                        git fetch --no-recurse-submodules origin
-                                        git config user.email "ecc.platform@noaa.gov"
-                                        git config user.name "epic-cicd-jenkins"
-                                        echo "Orion testing concluded..."
-					git remote -v | grep -w sshorigin > /dev/null 2>&1 && git remote remove sshorigin > /dev/null 2>&1
-					git remote add sshorigin $SSH_ORIGIN > /dev/null 2>&1
-                                        git pull sshorigin $FORK_BRANCH
-					git add rt.log.ORION
-                                        git commit -m "Orion Jobs Completed."
-                                        git push sshorigin HEAD:$FORK_BRANCH
-					'''
-				}
-			} // when
-			} 
-			post {
-				always {
-					script {
-						formatComment("Orion")
-					}
-				}
-			}
-		}
+//		stage('Run UPP RTs on Orion') {
+//			agent {
+//				label "orion"
+//			}
+//			environment {
+//				ACCNR = 'epic'
+//				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/orion'
+//			}
+//
+//			steps {		
+//				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+//					cleanWs()
+//					checkout scm
+//					sh '''
+//					echo $(pwd)
+//					cd ci/
+//                                        echo $CHANGE_ID
+//                                        export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
+//                                        export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
+//					./rt.sh -a ${ACCNR} -r `pwd`/rundir
+//                                        cd ../tests/logs
+//					git remote -v
+//                                        git fetch --no-recurse-submodules origin
+//                                        git config user.email "ecc.platform@noaa.gov"
+//                                        git config user.name "epic-cicd-jenkins"
+//                                        echo "Orion testing concluded..."
+//					git remote -v | grep -w sshorigin > /dev/null 2>&1 && git remote remove sshorigin > /dev/null 2>&1
+//					git remote add sshorigin $SSH_ORIGIN > /dev/null 2>&1
+//                                        git pull sshorigin $FORK_BRANCH
+//					git add rt.log.ORION
+//                                        git commit -m "Orion Jobs Completed."
+//                                        git push sshorigin HEAD:$FORK_BRANCH
+//					'''
+//				}
+//			} 
+//			post {
+//				always {
+//					script {
+//						formatComment("Orion")
+//					}
+//				}
+//			}
+//		}
 		
-		stage('Run UPP RTs on Hera') {
-			agent {
-				label "hera"
-			}
-			environment {
-				ACCNR = 'epic'
-				NODE_PATH = '/scratch2/NAGAPE/epic/UPP/jenkins-ci'
-			}
+//		stage('Run UPP RTs on Hera') {
+//			agent {
+//				label "hera"
+//			}
+//			environment {
+//				ACCNR = 'epic'
+//				NODE_PATH = '/scratch2/NAGAPE/epic/UPP/jenkins-ci'
+//			}
 
-			steps {
-			  when (CHOICE_NODE == 'hera') {
-					catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-					cleanWs()
-					checkout scm
-					sh '''
-					echo $(pwd)
-					cd ci/
-                                        echo $CHANGE_ID
-                                        export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
-                                        export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
-					./rt.sh -a ${ACCNR} -r `pwd`/rundir
-                                        cd ../tests/logs
-					git remote -v
-                                        git fetch --no-recurse-submodules origin
-                                        git config user.email "ecc.platform@noaa.gov"
-                                        git config user.name "epic-cicd-jenkins"
-                                        echo "Hera testing concluded..."
-                                        git remote -v | grep -w sshorigin > /dev/null 2>&1 && git remote remove sshorigin > /dev/null 2>&1
-					git remote add sshorigin $SSH_ORIGIN > /dev/null 2>&1
-                                        git pull sshorigin $FORK_BRANCH
-					git add rt.log.HERA
-                                        git commit -m "Hera Jobs Completed."
-                                        git push sshorigin HEAD:$FORK_BRANCH
-					'''
-				}
-			} // when
-			} 
-			post {
-				always {
-					script {
-						formatComment("Hera")
-					}
-				}
-			} 
-		}
+//			steps {
+//					catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+//					cleanWs()
+//					checkout scm
+//					sh '''
+//					echo $(pwd)
+//					cd ci/
+//                                        echo $CHANGE_ID
+//                                       export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
+//                                        export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
+//					./rt.sh -a ${ACCNR} -r `pwd`/rundir
+//                                        cd ../tests/logs
+//					git remote -v
+//                                        git fetch --no-recurse-submodules origin
+//                                       git config user.email "ecc.platform@noaa.gov"
+//                                        git config user.name "epic-cicd-jenkins"
+//                                        echo "Hera testing concluded..."
+//                                        git remote -v | grep -w sshorigin > /dev/null 2>&1 && git remote remove sshorigin > /dev/null 2>&1
+//					git remote add sshorigin $SSH_ORIGIN > /dev/null 2>&1
+//                                        git pull sshorigin $FORK_BRANCH
+//					git add rt.log.HERA
+//                                        git commit -m "Hera Jobs Completed."
+//                                        git push sshorigin HEAD:$FORK_BRANCH
+//					'''
+//				}
+//			} 
+//			post {
+//				always {
+//					script {
+//						formatComment("Hera")
+//					}
+//				}
+//			} 
+//		}
 		
 		stage('Run UPP RTs on Ursa') {
 			agent {
@@ -217,7 +213,6 @@ pipeline {
                                         git push sshorigin HEAD:$FORK_BRANCH
 					'''
 				}
-			} // when
 			} 
 			post {
 				always {
@@ -228,51 +223,49 @@ pipeline {
 			} 
 		}
 			
-		stage('Run UPP RTs on Hercules') {
-			agent {
-				label "hercules"
-			}
-			environment {
-				ACCNR = 'epic'
-				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/hercules'
-			}
-
-			steps {
-			  when (CHOICE_NODE == 'hercules'){			
-				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {	
-					cleanWs()
-					checkout scm
-					sh '''
-					echo $(pwd)
-					cd ci/
-                                        echo $CHANGE_ID
-                                        export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
-                                        export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
-					./rt.sh -a ${ACCNR} -r `pwd`/rundir
-                                        cd ../tests/logs
-					git remote -v
-                                        git fetch --no-recurse-submodules origin
-                                        git config user.email "ecc.platform@noaa.gov"
-                                        git config user.name "epic-cicd-jenkins"
-                                        echo "Hercules testing concluded..."
-                                        git remote -v | grep -w sshorigin > /dev/null 2>&1 && git remote remove sshorigin > /dev/null 2>&1
-					git remote add sshorigin $SSH_ORIGIN > /dev/null 2>&1
-                                        git pull sshorigin $FORK_BRANCH
-					git add rt.log.HERCULES
-                                        git commit -m "Hercules Jobs Completed."
-                                        git push sshorigin HEAD:$FORK_BRANCH
-					'''
-				}
-			}// when
-			} 
-			post {
-				always {
-					script {
-						formatComment("Hercules")
-					}
-				}
-			}
-		} 
+//		stage('Run UPP RTs on Hercules') {
+//			agent {
+//				label "hercules"
+//			}
+//			environment {
+//				ACCNR = 'epic'
+//				NODE_PATH = '/work/noaa/epic/UPP/jenkins-ci/hercules'
+//			}
+//
+//			steps {		
+//				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {	
+//					cleanWs()
+//					checkout scm
+//					sh '''
+//					echo $(pwd)
+//					cd ci/
+//                                        echo $CHANGE_ID
+//                                       export SSH_ORIGIN=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.repo.ssh_url')
+//                                        export FORK_BRANCH=$(curl --silent https://api.github.com/repos/NOAA-EMC/UPP/pulls/$CHANGE_ID | jq -r '.head.ref')
+//					./rt.sh -a ${ACCNR} -r `pwd`/rundir
+//                                        cd ../tests/logs
+//					git remote -v
+//                                        git fetch --no-recurse-submodules origin
+//                                        git config user.email "ecc.platform@noaa.gov"
+//                                        git config user.name "epic-cicd-jenkins"
+//                                        echo "Hercules testing concluded..."
+//                                        git remote -v | grep -w sshorigin > /dev/null 2>&1 && git remote remove sshorigin > /dev/null 2>&1
+//					git remote add sshorigin $SSH_ORIGIN > /dev/null 2>&1
+//                                        git pull sshorigin $FORK_BRANCH
+//					git add rt.log.HERCULES
+//                                        git commit -m "Hercules Jobs Completed."
+//                                        git push sshorigin HEAD:$FORK_BRANCH
+//					'''
+//				}
+//			} 
+//			post {
+//				always {
+//					script {
+//						formatComment("Hercules")
+//					}
+//				}
+//			}
+//		} 
 
 		// TO BE ADDED...
 		// stage('Run UPP RTs on Jet') {
